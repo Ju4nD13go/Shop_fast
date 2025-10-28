@@ -1,24 +1,31 @@
-from typing import Optional, Dict, Any
-from beanie import PydanticObjectId
+from typing import Any, Dict, Optional
+
 from app.models import ShoppingList
+from beanie import PydanticObjectId
 
 # ... resto del código sin cambios
+
 
 # Crear una nueva lista de compras
 async def crear_lista(shopping_list: ShoppingList) -> ShoppingList:
     await shopping_list.create()
     return shopping_list
 
+
 # Obtener una lista de compras por ID
 async def obtener_lista_por_id(list_id: PydanticObjectId) -> Optional[ShoppingList]:
     return await ShoppingList.get(list_id)
+
 
 # Obtener todas las listas de compras
 async def obtener_todas_las_listas() -> list[ShoppingList]:
     return await ShoppingList.find_all().to_list()
 
+
 # Actualizar una lista de compras
-async def actualizar_lista(list_id: PydanticObjectId, data: Dict[str, Any]) -> Optional[ShoppingList]:
+async def actualizar_lista(
+    list_id: PydanticObjectId, data: Dict[str, Any]
+) -> Optional[ShoppingList]:
     sl = await ShoppingList.get(list_id)
     if not sl:
         return None
@@ -29,6 +36,7 @@ async def actualizar_lista(list_id: PydanticObjectId, data: Dict[str, Any]) -> O
         sl.items = data["items"]
     await sl.save()
     return sl
+
 
 # Eliminar una lista de compras
 async def eliminar_lista(list_id: PydanticObjectId) -> bool:

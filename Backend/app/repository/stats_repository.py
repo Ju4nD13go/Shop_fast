@@ -1,5 +1,6 @@
 from datetime import datetime
-from app.models import User, Item, ShoppingList
+
+from app.models import Item, ShoppingList, User
 
 # ... resto del código sin cambios
 

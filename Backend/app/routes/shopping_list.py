@@ -1,17 +1,18 @@
-from fastapi import APIRouter, HTTPException, status, Response
-from beanie import PydanticObjectId
-from app.models import ShoppingList, Item
+from app.models import Item, ShoppingList
+from app.repository.shopping_list_repository import \
+    actualizar_lista as actualizar_lista_repo
+from app.repository.shopping_list_repository import \
+    eliminar_lista as eliminar_lista_repo
+from app.repository.shopping_list_repository import (obtener_lista_por_id,
+                                                     obtener_todas_las_listas)
 from app.schemas import ListCreate, ListResponse, ListUpdate
-from app.repository.shopping_list_repository import (
-    obtener_todas_las_listas,
-    obtener_lista_por_id,
-    actualizar_lista as actualizar_lista_repo,
-    eliminar_lista as eliminar_lista_repo,
-)
+from beanie import PydanticObjectId
+from fastapi import APIRouter, HTTPException, Response, status
 
 router = APIRouter(prefix="/lists", tags=["Lists"])
 
 # ... resto del código sin cambios
+
 
 def _cast_and_validate_ids(ids: list[str] | None) -> list[PydanticObjectId]:
     cast: list[PydanticObjectId] = []
@@ -26,6 +27,7 @@ def _cast_and_validate_ids(ids: list[str] | None) -> list[PydanticObjectId]:
         cast.append(oid)
     return cast
 
+
 @router.post("/", response_model=ListResponse, status_code=status.HTTP_201_CREATED)
 async def crear_lista(body: ListCreate):
     cast_ids = _cast_and_validate_ids(body.item_ids)
@@ -33,10 +35,12 @@ async def crear_lista(body: ListCreate):
     await doc.insert()
     return ListResponse.model_validate(doc, from_attributes=True)
 
+
 @router.get("/", response_model=list[ListResponse])
 async def listar_listas():
     lists = await obtener_todas_las_listas()
     return [ListResponse.model_validate(x, from_attributes=True) for x in lists]
+
 
 @router.get("/{list_id}", response_model=ListResponse)
 async def obtener_lista(list_id: PydanticObjectId):
@@ -44,6 +48,7 @@ async def obtener_lista(list_id: PydanticObjectId):
     if not sl:
         raise HTTPException(status_code=404, detail="Lista no encontrada")
     return ListResponse.model_validate(sl, from_attributes=True)
+
 
 @router.put("/{list_id}", response_model=ListResponse)
 async def actualizar_lista_endpoint(list_id: PydanticObjectId, update: ListUpdate):
@@ -55,6 +60,7 @@ async def actualizar_lista_endpoint(list_id: PydanticObjectId, update: ListUpdat
     if not updated:
         raise HTTPException(status_code=404, detail="Lista no encontrada")
     return ListResponse.model_validate(updated, from_attributes=True)
+
 
 @router.delete("/{list_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def eliminar_lista_endpoint(list_id: PydanticObjectId):

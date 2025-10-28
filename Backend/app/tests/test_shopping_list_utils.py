@@ -1,9 +1,7 @@
 import pytest
-from beanie import PydanticObjectId
-
-
 # Import the internal helper to validate casting of ids
 from app.routes.shopping_list import _cast_and_validate_ids
+from beanie import PydanticObjectId
 
 
 def test_cast_and_validate_ids_filters_invalid_and_keeps_valid() -> None:
