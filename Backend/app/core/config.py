@@ -10,7 +10,10 @@ class Settings(BaseSettings):
     port: int = 8000
 
     # MongoDB (use .env to override in production)
-    MONGO_URI: str = "mongodb+srv://shop_fast_db:zdTpxhxR5yTwFUnx@shop.z9he8ya.mongodb.net/shop_fast?retryWrites=true&w=majority&appName=Shop"
+    MONGO_URI = (
+    "mongodb+srv://shop_fast_db:zdTpxhxR5yTwFUnx@shop.z9he8ya.mongodb.net/"
+    "shop_fast?retryWrites=true&w=majority&appName=Shop"
+)
     DB_NAME: str = "shop_fast"
 
     # JWT
