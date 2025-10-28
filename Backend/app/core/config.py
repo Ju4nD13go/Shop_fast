@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     port: int = 8000
 
     # MongoDB (use .env to override in production)
-    MONGO_URI = (
+    MONGO_URI: str = (
         "mongodb+srv://shop_fast_db:zdTpxhxR5yTwFUnx@shop.z9he8ya.mongodb.net/"
         "shop_fast?retryWrites=true&w=majority&appName=Shop"
     )
@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
     # CORS (NUEVO)
-    CORS_ORIGINS: list = [
+    CORS_ORIGINS: list[str] = [
         "http://localhost:5173",
         "http://localhost:5174",
         "http://127.0.0.1:5173",
