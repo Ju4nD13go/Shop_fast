@@ -20,3 +20,5 @@ async def init_db():
     except Exception as e:
         print(f" Error al conectar a la base de datos: {e}")
         raise
+
+    #estoy realizando cambios para ver si se arregla el error.
