@@ -1,5 +1,6 @@
 from datetime import datetime
-from app.models import User, Item, ShoppingList
+
+from app.models import Item, ShoppingList, User
 
 # ... resto del código sin cambios
 
@@ -17,11 +18,13 @@ async def obtener_total_listas() -> int:
 
 
 async def obtener_items_comprados() -> int:
-    return await Item.find(Item.purchased == True).count()
+    # Cuenta items donde purchased es True
+    return await Item.find(Item.purchased == True).count()  # noqa: E712
 
 
 async def obtener_items_pendientes() -> int:
-    return await Item.find(Item.purchased == False).count()
+    # Cuenta items donde purchased es False
+    return await Item.find(Item.purchased == False).count()  # noqa: E712
 
 
 async def snapshot_stats() -> dict:

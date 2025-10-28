@@ -1,7 +1,9 @@
-from beanie import Document, PydanticObjectId, Link
-from pydantic import EmailStr, Field
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+
+from beanie import Document, PydanticObjectId
+from pydantic import EmailStr, Field
+
 
 class User(Document):
     username: str
@@ -11,6 +13,7 @@ class User(Document):
 
     class Settings:
         name = "users"
+
 
 class Item(Document):
     name: str
@@ -23,6 +26,7 @@ class Item(Document):
     class Settings:
         name = "items"
 
+
 class ShoppingList(Document):
     name: str
     items: list[PydanticObjectId] = Field(default_factory=list)
@@ -31,6 +35,7 @@ class ShoppingList(Document):
 
     class Settings:
         name = "shopping_lists"
+
 
 class Stats(Document):
     total_users: int

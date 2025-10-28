@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, EmailStr, Field, ConfigDict, field_serializer
+
 from beanie import PydanticObjectId
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_serializer
+
 
 # ========== USER SCHEMAS ==========
 class UserCreate(BaseModel):
@@ -9,9 +11,11 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=6)
 
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
 
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -24,24 +28,29 @@ class UserResponse(BaseModel):
     def serialize_id(self, v: PydanticObjectId) -> str:
         return str(v)
 
+
 class UserUpdate(BaseModel):
     username: Optional[str] = None
     email: Optional[EmailStr] = None
     password: Optional[str] = None
+
 
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: UserResponse
 
+
 # ========== ITEM SCHEMAS ==========
 class ItemCreate(BaseModel):
     name: str
     quantity: int = Field(default=1, ge=1)
 
+
 class ItemUpdate(BaseModel):
     name: Optional[str] = None
     quantity: Optional[int] = Field(default=None, ge=1)
+
 
 class ItemResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -56,17 +65,21 @@ class ItemResponse(BaseModel):
     def serialize_id(self, v: PydanticObjectId) -> str:
         return str(v)
 
+
 class ItemPurchase(BaseModel):
     purchased: bool = True
+
 
 # ========== LIST SCHEMAS ==========
 class ListCreate(BaseModel):
     name: str
     item_ids: list[str] = Field(default_factory=list)
 
+
 class ListUpdate(BaseModel):
     name: Optional[str] = None
     item_ids: Optional[list[str]] = None
+
 
 class ListResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -83,6 +96,7 @@ class ListResponse(BaseModel):
     @field_serializer("items")
     def _ser_items(self, v: list[PydanticObjectId]) -> list[str]:
         return [str(x) for x in v]
+
 
 # ========== STATS SCHEMAS ==========
 class StatsResponse(BaseModel):
