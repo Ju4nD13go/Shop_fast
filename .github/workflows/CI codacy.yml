@@ -1,8 +1,10 @@
 name: CI - Code Quality & Tests
 
 on:
-  pull_request:
+  push:
     branches: [ "develop" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   test_and_analyze:
@@ -21,7 +23,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r Backend/app/requirements.txt
-          pip install flake8 pytest pytest-cov codacy-coverage
+          if [ -f Backend/app/requirements-dev.txt ]; then pip install -r Backend/app/requirements-dev.txt; fi
 
       - name: Run lint (flake8)
         run: flake8 Backend/app --max-line-length=120 --exclude=__pycache__,migrations
