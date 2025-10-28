@@ -6,9 +6,11 @@ class Settings(BaseSettings):
     # App
     APP_NAME: str = "Mini Lista de Compras"
     DEBUG: bool = True
+    host: str = "0.0.0.0"
+    port: int = 8000
 
     # MongoDB (use .env to override in production)
-    MONGO_URI: str = "mongodb://localhost:27017"
+    MONGO_URI: str = "mongodb+srv://shop_fast_db:zdTpxhxR5yTwFUnx@shop.z9he8ya.mongodb.net/shop_fast?retryWrites=true&w=majority&appName=Shop"
     DB_NAME: str = "shop_fast"
 
     # JWT
