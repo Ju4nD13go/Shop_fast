@@ -16,8 +16,8 @@ if str(BACKEND_DIR) not in sys.path:
 # Skip tests that require httpx/TestClient if httpx isn't installed
 pytest.importorskip("httpx")
 
-from app.main import app as fastapi_app
-from fastapi.testclient import TestClient  # type: ignore
+from app.main import app as fastapi_app  # noqa: E402
+from fastapi.testclient import TestClient  # type: ignore  # noqa: E402
 
 
 @pytest.fixture(autouse=True)

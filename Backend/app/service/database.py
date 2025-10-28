@@ -10,7 +10,7 @@ async def init_db():
     global _client
     try:
         if _client is None:
-            print(f"Conectando a MongoDB Atlas:")
+            print("Conectando a MongoDB Atlas:")
             _client = AsyncIOMotorClient(settings.MONGO_URI)
         db = _client[settings.DB_NAME]
         await init_beanie(database=db, document_models=[User, Item, Stats, ShoppingList])

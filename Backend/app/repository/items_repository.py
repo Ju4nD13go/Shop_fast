@@ -13,7 +13,8 @@ async def crear_item(item: Item) -> Item:
 
 
 async def obtener_items_por_usuario(user_id: PydanticObjectId) -> List[Item]:
-    return await Item.find(Item.owner.id == user_id).to_list()
+    # El modelo `Item` usa `user_id` para relacionar al usuario
+    return await Item.find(Item.user_id == user_id).to_list()
 
 
 async def obtener_item_por_id(item_id: PydanticObjectId) -> Optional[Item]:
@@ -42,7 +43,8 @@ async def eliminar_item(item_id: PydanticObjectId) -> bool:
 
 # Opcionales
 async def obtener_items_pendientes(user_id: PydanticObjectId) -> List[Item]:
-    return await Item.find(Item.owner.id == user_id, Item.purchased == False).to_list()
+    # Retorna items del usuario que no han sido comprados
+    return await Item.find(Item.user_id == user_id, Item.purchased == False).to_list()  # noqa: E712
 
 
 async def marcar_item_comprado(item_id: PydanticObjectId, purchased: bool) -> Optional[Item]:
