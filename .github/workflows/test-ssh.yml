@@ -16,6 +16,6 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            echo "✅ Conexión SSH exitosa con EC2"
+            echo "Conexión SSH exitosa con EC2"
             hostname
             pwd
