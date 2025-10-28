@@ -1,10 +1,7 @@
-from app.models import Item, ShoppingList
-from app.repository.shopping_list_repository import \
-    actualizar_lista as actualizar_lista_repo
-from app.repository.shopping_list_repository import \
-    eliminar_lista as eliminar_lista_repo
-from app.repository.shopping_list_repository import (obtener_lista_por_id,
-                                                     obtener_todas_las_listas)
+from app.models import ShoppingList
+from app.repository.shopping_list_repository import actualizar_lista as actualizar_lista_repo
+from app.repository.shopping_list_repository import eliminar_lista as eliminar_lista_repo
+from app.repository.shopping_list_repository import obtener_lista_por_id, obtener_todas_las_listas
 from app.schemas import ListCreate, ListResponse, ListUpdate
 from beanie import PydanticObjectId
 from fastapi import APIRouter, HTTPException, Response, status

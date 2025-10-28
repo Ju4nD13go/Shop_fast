@@ -1,17 +1,13 @@
-from app.core.auth import (create_access_token, get_current_user,
-                           get_password_hash, verify_password)
+from app.core.auth import create_access_token, get_current_user, get_password_hash, verify_password
 from app.models import User
 from app.schemas import TokenResponse, UserCreate, UserLogin, UserResponse
-from beanie import PydanticObjectId
 from fastapi import APIRouter, Depends, HTTPException, status
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
 # Registro
-@router.post(
-    "/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED
-)
+@router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
 async def register(user_data: UserCreate):
     # Verificar si el email ya existe
     existing_user = await User.find_one(User.email == user_data.email)
@@ -31,9 +27,7 @@ async def register(user_data: UserCreate):
 
     # Crear usuario
     hashed_password = get_password_hash(user_data.password)
-    new_user = User(
-        username=user_data.username, email=user_data.email, password=hashed_password
-    )
+    new_user = User(username=user_data.username, email=user_data.email, password=hashed_password)
     await new_user.insert()
 
     # Crear token

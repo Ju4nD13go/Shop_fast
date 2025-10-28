@@ -23,9 +23,7 @@ async def obtener_todas_las_listas() -> list[ShoppingList]:
 
 
 # Actualizar una lista de compras
-async def actualizar_lista(
-    list_id: PydanticObjectId, data: Dict[str, Any]
-) -> Optional[ShoppingList]:
+async def actualizar_lista(list_id: PydanticObjectId, data: Dict[str, Any]) -> Optional[ShoppingList]:
     sl = await ShoppingList.get(list_id)
     if not sl:
         return None

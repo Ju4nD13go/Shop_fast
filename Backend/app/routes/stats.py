@@ -15,12 +15,8 @@ async def get_stats(current_user: User = Depends(get_current_user)):
     """
     try:
         total_items = await Item.find(Item.user_id == current_user.id).count()
-        items_purchased = await Item.find(
-            Item.user_id == current_user.id, Item.purchased == True
-        ).count()
-        items_pending = await Item.find(
-            Item.user_id == current_user.id, Item.purchased == False
-        ).count()
+        items_purchased = await Item.find(Item.user_id == current_user.id, Item.purchased == True).count()
+        items_pending = await Item.find(Item.user_id == current_user.id, Item.purchased == False).count()
 
         data = {
             "total_users": 1,  # Solo el usuario actual
@@ -32,6 +28,4 @@ async def get_stats(current_user: User = Depends(get_current_user)):
         }
         return StatsResponse.model_validate(data)
     except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Error al obtener estadísticas: {e}"
-        )
+        raise HTTPException(status_code=500, detail=f"Error al obtener estadísticas: {e}")

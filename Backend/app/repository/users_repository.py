@@ -11,9 +11,7 @@ async def crear_usuario(user: User) -> User:
     return user
 
 
-async def actualizar_usuario(
-    user_id: PydanticObjectId, data: Dict[str, Any]
-) -> Optional[User]:
+async def actualizar_usuario(user_id: PydanticObjectId, data: Dict[str, Any]) -> Optional[User]:
     user = await User.get(user_id)
     if not user:
         return None

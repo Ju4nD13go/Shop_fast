@@ -1,8 +1,6 @@
 from app.core.auth import get_current_user
 from app.models import Item, User
-from app.repository.items_repository import (actualizar_item, crear_item,
-                                             eliminar_item,
-                                             marcar_item_comprado)
+from app.repository.items_repository import actualizar_item, crear_item, eliminar_item, marcar_item_comprado
 from app.schemas import ItemCreate, ItemPurchase, ItemResponse, ItemUpdate
 from beanie import PydanticObjectId
 from fastapi import APIRouter, Depends, HTTPException, Response, status
@@ -19,9 +17,7 @@ async def get_all_items(current_user: User = Depends(get_current_user)):
 
 # Crear un nuevo ítem
 @router.post("/", response_model=ItemResponse, status_code=status.HTTP_201_CREATED)
-async def create_item(
-    payload: ItemCreate, current_user: User = Depends(get_current_user)
-):
+async def create_item(payload: ItemCreate, current_user: User = Depends(get_current_user)):
     item = Item(name=payload.name, quantity=payload.quantity, user_id=current_user.id)
     creado = await crear_item(item)
     return ItemResponse.model_validate(creado, from_attributes=True)
@@ -46,15 +42,13 @@ async def update_item(
 
 # Eliminar ítem
 @router.delete("/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_item(
-    item_id: PydanticObjectId, current_user: User = Depends(get_current_user)
-):
+async def delete_item(item_id: PydanticObjectId, current_user: User = Depends(get_current_user)):
     # Verificar que el item pertenece al usuario
     item = await Item.get(item_id)
     if not item or item.user_id != current_user.id:
         raise HTTPException(status_code=404, detail="Item no encontrado")
 
-    ok = await eliminar_item(item_id)
+    await eliminar_item(item_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 

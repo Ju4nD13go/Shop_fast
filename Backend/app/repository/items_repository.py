@@ -20,9 +20,7 @@ async def obtener_item_por_id(item_id: PydanticObjectId) -> Optional[Item]:
     return await Item.get(item_id)
 
 
-async def actualizar_item(
-    item_id: PydanticObjectId, data: Dict[str, Any]
-) -> Optional[Item]:
+async def actualizar_item(item_id: PydanticObjectId, data: Dict[str, Any]) -> Optional[Item]:
     item = await Item.get(item_id)
     if not item:
         return None
@@ -47,9 +45,7 @@ async def obtener_items_pendientes(user_id: PydanticObjectId) -> List[Item]:
     return await Item.find(Item.owner.id == user_id, Item.purchased == False).to_list()
 
 
-async def marcar_item_comprado(
-    item_id: PydanticObjectId, purchased: bool
-) -> Optional[Item]:
+async def marcar_item_comprado(item_id: PydanticObjectId, purchased: bool) -> Optional[Item]:
     item = await Item.get(item_id)
     if not item:
         return None
