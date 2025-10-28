@@ -20,24 +20,24 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -euo pipefail
-            echo "🚀 Desplegando en EC2..."
+            echo "Desplegando en EC2..."
             cd /home/ec2-user/Shop_fast || git clone https://github.com/Ju4nD13go/Shop_fast.git /home/ec2-user/Shop_fast && cd /home/ec2-user/Shop_fast
 
-            echo "📥 Actualizando código..."
+            echo "Actualizando código..."
             git fetch --all
             git reset --hard origin/main
 
-            echo "🧾 Creando archivo .env"
+            echo "Creando archivo .env"
             echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
 
-            echo "🐳 Asegurando Docker..."
+            echo "Asegurando Docker..."
             sudo yum install -y docker git || true
             sudo systemctl start docker || true
             sudo systemctl enable docker || true
 
-            echo "🐳 Iniciando contenedores..."
+            echo "Iniciando contenedores..."
             docker compose down --remove-orphans || true
             docker compose build --no-cache
             docker compose up -d
 
-            echo "✅ Despliegue completado exitosamente"
+            echo "Despliegue completado exitosamente"
