@@ -1,8 +1,10 @@
 name: CI - Code Quality & Tests
 
 on:
-  pull_request:
+  push:
     branches: [ "develop" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   test_and_analyze:
