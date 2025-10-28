@@ -2,7 +2,7 @@ name: CI - Code Quality & Tests
 
 on:
   pull_request:
-    branches: [ "development" ]
+    branches: [ "develop" ]
 
 jobs:
   test_and_analyze:
