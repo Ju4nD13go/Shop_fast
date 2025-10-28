@@ -1,0 +1,43 @@
+name: CD - Deploy FastAPI Backend to AWS EC2
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@029f5b4aeeeb58fdfe1410a5d17f967dacf36262
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -euo pipefail
+            echo "🚀 Desplegando en EC2..."
+            cd /home/ec2-user/Shop_fast || git clone https://github.com/Ju4nD13go/Shop_fast.git /home/ec2-user/Shop_fast && cd /home/ec2-user/Shop_fast
+
+            echo "📥 Actualizando código..."
+            git fetch --all
+            git reset --hard origin/main
+
+            echo "🧾 Creando archivo .env"
+            echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
+
+            echo "🐳 Asegurando Docker..."
+            sudo yum install -y docker git || true
+            sudo systemctl start docker || true
+            sudo systemctl enable docker || true
+
+            echo "🐳 Iniciando contenedores..."
+            docker compose down --remove-orphans || true
+            docker compose build --no-cache
+            docker compose up -d
+
+            echo "✅ Despliegue completado exitosamente"
