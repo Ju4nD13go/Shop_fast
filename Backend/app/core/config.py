@@ -1,4 +1,3 @@
-# backend/app/core/config.py
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -11,9 +10,9 @@ class Settings(BaseSettings):
 
     # MongoDB (use .env to override in production)
     MONGO_URI = (
-    "mongodb+srv://shop_fast_db:zdTpxhxR5yTwFUnx@shop.z9he8ya.mongodb.net/"
-    "shop_fast?retryWrites=true&w=majority&appName=Shop"
-)
+        "mongodb+srv://shop_fast_db:zdTpxhxR5yTwFUnx@shop.z9he8ya.mongodb.net/"
+        "shop_fast?retryWrites=true&w=majority&appName=Shop"
+    )
     DB_NAME: str = "shop_fast"
 
     # JWT
