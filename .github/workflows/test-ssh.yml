@@ -1,0 +1,21 @@
+name: Test SSH Connection to EC2
+
+on:
+  workflow_dispatch:  # Permite ejecutarlo manualmente
+
+jobs:
+  test-ssh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test SSH Connection
+        # Pinned to full commit SHA to make the action immutable (security best practice)
+        uses: appleboy/ssh-action@029f5b4aeeeb58fdfe1410a5d17f967dacf36262
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "Conexión SSH exitosa con EC2 AWS"
+            hostname
+            pwd
