@@ -1,12 +1,15 @@
-from typing import Optional, Dict, Any
-from beanie import PydanticObjectId
+from typing import Any, Dict, Optional
+
 from app.models import User
+from beanie import PydanticObjectId
 
 # ... resto del código sin cambios
+
 
 async def crear_usuario(user: User) -> User:
     await user.insert()
     return user
+
 
 async def actualizar_usuario(user_id: PydanticObjectId, data: Dict[str, Any]) -> Optional[User]:
     user = await User.get(user_id)
@@ -20,6 +23,7 @@ async def actualizar_usuario(user_id: PydanticObjectId, data: Dict[str, Any]) ->
         setattr(user, k, v)
     await user.save()
     return user
+
 
 async def eliminar_usuario(user_id: PydanticObjectId) -> bool:
     user = await User.get(user_id)

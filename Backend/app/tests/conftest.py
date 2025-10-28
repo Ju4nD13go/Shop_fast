@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-import pytest
 
+import pytest
 
 # Ensure the Backend folder is on sys.path so `import app...` works
 THIS_FILE = Path(__file__).resolve()
@@ -16,8 +16,8 @@ if str(BACKEND_DIR) not in sys.path:
 # Skip tests that require httpx/TestClient if httpx isn't installed
 pytest.importorskip("httpx")
 
-from fastapi.testclient import TestClient  # type: ignore
-from app.main import app as fastapi_app
+from app.main import app as fastapi_app  # noqa: E402
+from fastapi.testclient import TestClient  # type: ignore  # noqa: E402
 
 
 @pytest.fixture(autouse=True)
