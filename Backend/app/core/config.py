@@ -5,7 +5,7 @@ class Settings(BaseSettings):
     # App
     APP_NAME: str = "Mini Lista de Compras"
     DEBUG: bool = True
-    host: str = "0.0.0.0"
+    host: str = "127.0.0.1"
     port: int = 8000
 
     # MongoDB (use .env to override in production)
