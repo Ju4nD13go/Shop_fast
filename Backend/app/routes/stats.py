@@ -8,6 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 router = APIRouter(prefix="/stats", tags=["Stats"])
 
+
 @router.get("/", response_model=StatsResponse)
 async def get_stats(current_user: User = Depends(get_current_user)):
     """
@@ -16,13 +17,14 @@ async def get_stats(current_user: User = Depends(get_current_user)):
     try:
         # Filtrar TODOS los items del usuario, no importa la lista
         total_items = await Item.find(Item.user_id == current_user.id).count()
+        # Beanie: mantener comparación explícita para query; desactivar E712 de ruff
         items_purchased = await Item.find(
-            Item.user_id == current_user.id, 
-            Item.purchased == True
+            Item.user_id == current_user.id,
+            Item.purchased == True,  # noqa: E712
         ).count()
         items_pending = await Item.find(
-            Item.user_id == current_user.id, 
-            Item.purchased == False
+            Item.user_id == current_user.id,
+            Item.purchased == False,  # noqa: E712
         ).count()
 
         data = {

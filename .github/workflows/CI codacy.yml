@@ -24,6 +24,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r Backend/app/requirements.txt
           if [ -f Backend/app/requirements-dev.txt ]; then pip install -r Backend/app/requirements-dev.txt; fi
+          pip install ruff
+
+      # --- 🧹 Nuevo paso: Análisis / Corrección con Ruff ---
+      - name: Run lint (ruff)
+        run: |
+          echo "Ejecutando Ruff..."
+          if [ "${{ github.ref_name }}" = "develop" ]; then
+            echo "🧠 Rama develop detectada: aplicando correcciones automáticas..."
+            ruff check Backend/app --fix --exit-non-zero-on-fix --output-format=github
+          else
+            echo "🔍 Rama main o PR detectada: solo análisis, sin correcciones..."
+            ruff check Backend/app --output-format=github
+          fi
+      # -----------------------------------------------------
 
       - name: Run lint (flake8)
         run: flake8 Backend/app --max-line-length=120 --exclude=__pycache__,migrations
