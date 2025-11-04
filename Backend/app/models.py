@@ -19,7 +19,8 @@ class Item(Document):
     name: str
     quantity: int = 1
     purchased: bool = False
-    user_id: PydanticObjectId  # NUEVO: Relacionar con usuario
+    user_id: PydanticObjectId
+    list_id: PydanticObjectId  # ESTE CAMPO DEBE EXISTIR
     created_at: datetime = Field(default_factory=datetime.utcnow)
     purchased_at: Optional[datetime] = None
 
@@ -27,10 +28,11 @@ class Item(Document):
         name = "items"
 
 
+# models.py
 class ShoppingList(Document):
     name: str
     items: list[PydanticObjectId] = Field(default_factory=list)
-    user_id: PydanticObjectId  # NUEVO: Relacionar con usuario
+    user_id: PydanticObjectId  # ESTE CAMPO DEBE EXISTIR
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     class Settings:
