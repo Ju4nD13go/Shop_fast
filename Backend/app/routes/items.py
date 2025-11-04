@@ -1,5 +1,6 @@
+# routes/items.py
 from app.core.auth import get_current_user
-from app.models import Item, User
+from app.models import Item, User, ShoppingList  # AÑADE ShoppingList aquí
 from app.repository.items_repository import actualizar_item, crear_item, eliminar_item, marcar_item_comprado
 from app.schemas import ItemCreate, ItemPurchase, ItemResponse, ItemUpdate
 from beanie import PydanticObjectId
@@ -11,16 +12,39 @@ router = APIRouter(prefix="/items", tags=["Items"])
 # Obtener todos los items del usuario autenticado
 @router.get("/", response_model=list[ItemResponse])
 async def get_all_items(current_user: User = Depends(get_current_user)):
+    # Ahora obtenemos todos los items del usuario
     items = await Item.find(Item.user_id == current_user.id).to_list()
+    return [ItemResponse.model_validate(item, from_attributes=True) for item in items]
+
+
+@router.get("/list/{list_id}", response_model=list[ItemResponse])
+async def get_items_by_list(list_id: PydanticObjectId, current_user: User = Depends(get_current_user)):
+    # Verificar que la lista pertenece al usuario
+    list_obj = await ShoppingList.find_one(ShoppingList.id == list_id, ShoppingList.user_id == current_user.id)
+    if not list_obj:
+        raise HTTPException(status_code=404, detail="Lista no encontrada")
+    
+    items = await Item.find(Item.list_id == list_id, Item.user_id == current_user.id).to_list()
     return [ItemResponse.model_validate(item, from_attributes=True) for item in items]
 
 
 # Crear un nuevo ítem
 @router.post("/", response_model=ItemResponse, status_code=status.HTTP_201_CREATED)
 async def create_item(payload: ItemCreate, current_user: User = Depends(get_current_user)):
-    item = Item(name=payload.name, quantity=payload.quantity, user_id=current_user.id)
-    creado = await crear_item(item)
-    return ItemResponse.model_validate(creado, from_attributes=True)
+    # Verificar que la lista existe y pertenece al usuario
+    if payload.list_id:
+        list_obj = await ShoppingList.find_one(ShoppingList.id == payload.list_id, ShoppingList.user_id == current_user.id)
+        if not list_obj:
+            raise HTTPException(status_code=404, detail="Lista no encontrada")
+    
+    item = Item(
+        name=payload.name, 
+        quantity=payload.quantity, 
+        user_id=current_user.id,
+        list_id=payload.list_id
+    )
+    await item.insert()
+    return ItemResponse.model_validate(item, from_attributes=True)
 
 
 # Actualizar un ítem
