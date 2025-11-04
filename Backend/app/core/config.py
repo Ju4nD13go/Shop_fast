@@ -20,11 +20,18 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
-    # CORS (NUEVO)
+    # CORS (permitir app web local, Capacitor y backend público EC2)
+    # Nota: El origen de la app Android con Capacitor es "capacitor://localhost"
     CORS_ORIGINS: list[str] = [
+        # Desarrollo web local (Vite)
         "http://localhost:5173",
         "http://localhost:5174",
         "http://127.0.0.1:5173",
+        # App móvil (Capacitor)
+        "capacitor://localhost",
+        # Backend público (EC2) - por si consumes desde app web externa
+        "http://3.145.28.63:8000",
+        "https://3.145.28.63:8000",
     ]
 
     model_config = SettingsConfigDict(

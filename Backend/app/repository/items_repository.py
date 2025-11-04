@@ -45,9 +45,18 @@ async def eliminar_item(item_id: PydanticObjectId) -> bool:
 
 async def obtener_items_pendientes(user_id: PydanticObjectId, list_id: Optional[PydanticObjectId] = None) -> List[Item]:
     if list_id:
-        return await Item.find(Item.user_id == user_id, Item.list_id == list_id, Item.purchased == False).to_list()
+        # Beanie: mantener comparación explícita para query; desactivar E712 de ruff
+        return await Item.find(
+            Item.user_id == user_id,
+            Item.list_id == list_id,
+            Item.purchased == False,  # noqa: E712
+        ).to_list()
     else:
-        return await Item.find(Item.user_id == user_id, Item.purchased == False).to_list()
+        # Beanie: mantener comparación explícita para query; desactivar E712 de ruff
+        return await Item.find(
+            Item.user_id == user_id,
+            Item.purchased == False,  # noqa: E712
+        ).to_list()
 
 
 async def marcar_item_comprado(item_id: PydanticObjectId, purchased: bool) -> Optional[Item]:
