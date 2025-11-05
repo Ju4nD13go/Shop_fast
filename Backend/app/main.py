@@ -9,17 +9,16 @@ from fastapi.middleware.cors import CORSMiddleware
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
+    
     print("Conectando a MongoDB...")
     await init_db()
     print("MongoDB conectado correctamente.")
     yield
-    # Shutdown (agrega limpieza si es necesario)
 
 
 app = FastAPI(title=settings.APP_NAME, redirect_slashes=False, lifespan=lifespan)
 
-# ✅ CORS - Actualizado para incluir EC2 y Capacitor
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[*settings.CORS_ORIGINS],
