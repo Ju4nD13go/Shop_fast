@@ -7,7 +7,7 @@ on:
 jobs:
   deploy:
     # Solo ejecutar si el commit proviene de un merge desde develop
-    if: ${{ github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'Merge branch ''develop''') }}
+    if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'from Ju4nD13go/develop')
 
 
     runs-on: ubuntu-latest
