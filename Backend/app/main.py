@@ -9,7 +9,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    
     print("Conectando a MongoDB...")
     await init_db()
     print("MongoDB conectado correctamente.")
@@ -17,7 +16,6 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title=settings.APP_NAME, redirect_slashes=False, lifespan=lifespan)
-
 
 app.add_middleware(
     CORSMiddleware,
