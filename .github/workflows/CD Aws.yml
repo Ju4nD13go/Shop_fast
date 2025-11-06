@@ -16,10 +16,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Verificar origen del commit
+      - name: Verificar origen del merge
         run: |
           echo "Verificando si el push proviene de 'develop'..."
-          if ! echo "${{ github.event.head_commit.message }}" | grep -q "Merge branch 'develop'"; then
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          echo "$COMMIT_MSG"
+          if ! echo "$COMMIT_MSG" | grep -qE "from Ju4nD13go/develop|Merge branch 'develop'"; then
             echo "El commit no proviene de 'develop'."
             echo "Solo se permiten merges desde la rama 'develop' hacia 'main'."
             exit 1
