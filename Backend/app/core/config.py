@@ -20,7 +20,6 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
-    
     CORS_ORIGINS: list[str] = [
         # Desarrollo web local (Vite)
         "http://localhost:5173",
