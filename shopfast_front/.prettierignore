@@ -1,0 +1,14 @@
+# Output
+/dist
+/node_modules
+/coverage
+
+# Android build outputs
+/android/**/build
+/android/**/generated
+/android/**/intermediates
+/android/**/outputs
+/android/**/tmp
+
+# Misc
+.DS_Store

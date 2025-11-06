@@ -1,5 +1,8 @@
 {
   "appId": "com.shopfast.app",
   "appName": "ShopFast",
-  "webDir": "dist"
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "http"
+  }
 }
