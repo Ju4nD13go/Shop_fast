@@ -6,11 +6,25 @@ on:
 
 jobs:
   deploy:
+    # Solo ejecutar si el commit proviene de un merge desde develop
+    if: ${{ github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'Merge branch ''develop''') }}
+
+
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Verificar origen del commit
+        run: |
+          echo "Verificando si el push proviene de 'develop'..."
+          if ! echo "${{ github.event.head_commit.message }}" | grep -q "Merge branch 'develop'"; then
+            echo "El commit no proviene de 'develop'."
+            echo "Solo se permiten merges desde la rama 'develop' hacia 'main'."
+            exit 1
+          fi
+          echo "Merge válido desde 'develop'. Continuando con el despliegue..."
 
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@029f5b4aeeeb58fdfe1410a5d17f967dacf36262
