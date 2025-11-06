@@ -35,7 +35,7 @@ async def root():
     }
 
 
-# Rutas
+# Rutas de la aplicación para modularidad
 app.include_router(user.router)  # /auth/*
 app.include_router(items.router)  # /items/*
 app.include_router(stats.router)  # /stats/*
