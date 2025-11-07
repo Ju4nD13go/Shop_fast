@@ -22,6 +22,7 @@ class Settings(BaseSettings):
 
     CORS_ORIGINS: list[str] = [
         # Desarrollo web local (Vite)
+        "https://shop-fast.onrender.com",
         "http://localhost",
         "http://localhost:5173",
         "http://localhost:5174",
