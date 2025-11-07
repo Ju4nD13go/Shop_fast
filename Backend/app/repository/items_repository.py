@@ -1,10 +1,9 @@
+# repository/items_repository.py
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from app.models import Item
 from beanie import PydanticObjectId
-
-# ... resto del código sin cambios
 
 
 async def crear_item(item: Item) -> Item:
@@ -13,8 +12,11 @@ async def crear_item(item: Item) -> Item:
 
 
 async def obtener_items_por_usuario(user_id: PydanticObjectId) -> List[Item]:
-    # El modelo `Item` usa `user_id` para relacionar al usuario
     return await Item.find(Item.user_id == user_id).to_list()
+
+
+async def obtener_items_por_lista(user_id: PydanticObjectId, list_id: PydanticObjectId) -> List[Item]:
+    return await Item.find(Item.user_id == user_id, Item.list_id == list_id).to_list()
 
 
 async def obtener_item_por_id(item_id: PydanticObjectId) -> Optional[Item]:
@@ -41,10 +43,20 @@ async def eliminar_item(item_id: PydanticObjectId) -> bool:
     return True
 
 
-# Opcionales
-async def obtener_items_pendientes(user_id: PydanticObjectId) -> List[Item]:
-    # Retorna items del usuario que no han sido comprados
-    return await Item.find(Item.user_id == user_id, Item.purchased == False).to_list()  # noqa: E712
+async def obtener_items_pendientes(user_id: PydanticObjectId, list_id: Optional[PydanticObjectId] = None) -> List[Item]:
+    if list_id:
+        # Beanie: mantener comparación explícita para query; desactivar E712 de ruff
+        return await Item.find(
+            Item.user_id == user_id,
+            Item.list_id == list_id,
+            Item.purchased == False,  # noqa: E712
+        ).to_list()
+    else:
+        # Beanie: mantener comparación explícita para query; desactivar E712 de ruff
+        return await Item.find(
+            Item.user_id == user_id,
+            Item.purchased == False,  # noqa: E712
+        ).to_list()
 
 
 async def marcar_item_comprado(item_id: PydanticObjectId, purchased: bool) -> Optional[Item]:

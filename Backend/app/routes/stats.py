@@ -1,3 +1,4 @@
+# routes/stats.py
 from datetime import datetime
 
 from app.core.auth import get_current_user
@@ -14,9 +15,17 @@ async def get_stats(current_user: User = Depends(get_current_user)):
     Retorna estadísticas del usuario autenticado.
     """
     try:
+        # Filtrar TODOS los items del usuario, no importa la lista
         total_items = await Item.find(Item.user_id == current_user.id).count()
-        items_purchased = await Item.find(Item.user_id == current_user.id, Item.purchased == True).count()  # noqa: E712
-        items_pending = await Item.find(Item.user_id == current_user.id, Item.purchased == False).count()  # noqa: E712
+        # Beanie: mantener comparación explícita para query; desactivar E712 de ruff
+        items_purchased = await Item.find(
+            Item.user_id == current_user.id,
+            Item.purchased == True,  # noqa: E712
+        ).count()
+        items_pending = await Item.find(
+            Item.user_id == current_user.id,
+            Item.purchased == False,  # noqa: E712
+        ).count()
 
         data = {
             "total_users": 1,  # Solo el usuario actual
