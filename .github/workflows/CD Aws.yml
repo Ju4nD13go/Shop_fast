@@ -1,4 +1,4 @@
-name: CD - Deploy FastAPI Backend to AWS EC2
+name: CD - Deploy Backend & Frontend (AWS EC2 + Render)
 
 on:
   push:
@@ -6,13 +6,29 @@ on:
 
 jobs:
   deploy:
+    # Solo ejecutar si el commit proviene de un merge desde develop
+    if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'from Ju4nD13go/develop')
+
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to EC2 via SSH
+      - name: Verificar origen del merge
+        run: |
+          echo "Verificando si el push proviene de 'develop'..."
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          echo "$COMMIT_MSG"
+          if ! echo "$COMMIT_MSG" | grep -qE "from Ju4nD13go/develop|Merge branch 'develop'"; then
+            echo "El commit no proviene de 'develop'."
+            echo "Solo se permiten merges desde la rama 'develop' hacia 'main'."
+            exit 1
+          fi
+          echo "Merge válido desde 'develop'. Continuando con el despliegue..."
+
+      # 🟢 BACKEND - Despliegue en EC2
+      - name: Deploy FastAPI backend to EC2
         uses: appleboy/ssh-action@029f5b4aeeeb58fdfe1410a5d17f967dacf36262
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -20,24 +36,33 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -euo pipefail
-            echo "🚀 Desplegando en EC2..."
+            echo "Desplegando en EC2..."
             cd /home/ec2-user/Shop_fast || git clone https://github.com/Ju4nD13go/Shop_fast.git /home/ec2-user/Shop_fast && cd /home/ec2-user/Shop_fast
 
-            echo "📥 Actualizando código..."
+            echo "Actualizando código..."
             git fetch --all
             git reset --hard origin/main
 
-            echo "🧾 Creando archivo .env"
+            echo "Creando archivo .env"
             echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
 
-            echo "🐳 Asegurando Docker..."
+            echo "Asegurando Docker..."
             sudo yum install -y docker git || true
             sudo systemctl start docker || true
             sudo systemctl enable docker || true
 
-            echo "🐳 Iniciando contenedores..."
-            docker compose down --remove-orphans || true
-            docker compose build --no-cache
-            docker compose up -d
+            echo "Iniciando contenedores..."
+            docker-compose down || true
+            docker-compose build --no-cache
+            docker-compose up -d
 
-            echo "✅ Despliegue completado exitosamente"
+            echo "✅ Backend desplegado correctamente en EC2"
+
+      # 🟣 FRONTEND - Despliegue en Render
+      - name: Trigger Render redeploy (frontend)
+        run: |
+          echo "🚀 Desplegando frontend en Render..."
+          curl -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
+            -H "Accept: application/json" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
+          echo "Frontend redeploy solicitado correctamente a Render"
