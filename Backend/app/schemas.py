@@ -45,6 +45,7 @@ class TokenResponse(BaseModel):
 class ItemCreate(BaseModel):
     name: str
     quantity: int = Field(default=1, ge=1)
+    list_id: PydanticObjectId  # NUEVO
 
 
 class ItemUpdate(BaseModel):
@@ -59,9 +60,10 @@ class ItemResponse(BaseModel):
     quantity: int
     purchased: bool
     user_id: PydanticObjectId
+    list_id: PydanticObjectId  # NUEVO
     created_at: datetime
 
-    @field_serializer("id", "user_id")
+    @field_serializer("id", "user_id", "list_id")
     def serialize_id(self, v: PydanticObjectId) -> str:
         return str(v)
 

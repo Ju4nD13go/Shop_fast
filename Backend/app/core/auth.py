@@ -18,7 +18,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer()
 
 # ==========================
-# 🔑 Funciones de contraseña
+# Funciones de contraseña
 # ==========================
 
 
@@ -43,7 +43,7 @@ def get_password_hash(password: str) -> str:
 
 
 # ==========================
-# 🕒 Funciones de token JWT
+# Funciones de token JWT
 # ==========================
 
 
@@ -68,7 +68,7 @@ def decode_access_token(token: str) -> Optional[dict]:
 
 
 # ==========================
-# 👤 Usuario actual
+# Usuario actual
 # ==========================
 
 

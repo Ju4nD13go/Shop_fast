@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     host: str = "127.0.0.1"
     port: int = 8000
 
-    # MongoDB (use .env to override in production)
+    # Database
     MONGO_URI: str = (
         "mongodb+srv://shop_fast_db:zdTpxhxR5yTwFUnx@shop.z9he8ya.mongodb.net/"
         "shop_fast?retryWrites=true&w=majority&appName=Shop"
@@ -20,11 +20,18 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
-    # CORS (NUEVO)
     CORS_ORIGINS: list[str] = [
+        # Desarrollo web local (Vite)
+        "https://shop-fast.onrender.com",
+        "http://localhost",
         "http://localhost:5173",
         "http://localhost:5174",
         "http://127.0.0.1:5173",
+        "capacitor://localhost",
+        "ionic://localhost",
+        "http://10.0.2.2:8000",
+        "http://3.145.28.63:8000",
+        "https://3.145.28.63:8000",
     ]
 
     model_config = SettingsConfigDict(
